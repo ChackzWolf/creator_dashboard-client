@@ -7,8 +7,12 @@ const LoginPage: React.FC = () => {
   console.log(location.pathname)
   return (
     <Layout>
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="min-h-[calc(100vh-4rem)]  flex items-center justify-between">
+
         <LoginForm />
+        <div className='w-1/2 '>
+          
+        </div>
       </div>
     </Layout>
   );

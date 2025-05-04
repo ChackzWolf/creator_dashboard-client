@@ -12,18 +12,18 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-indigo-600 text-white shadow-md">
+    <nav className="bg-shell text-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-3">
           <div className="flex items-center space-x-4">
             <Link to="/" className="font-bold text-xl">Creator Dashboard</Link>
             {isAuthenticated && (
               <div className="hidden md:flex space-x-4">
-                <Link to="/dashboard" className="hover:text-indigo-200">Dashboard</Link>
-                <Link to="/feed" className="hover:text-indigo-200">Feed</Link>
-                <Link to="/profile" className="hover:text-indigo-200">Profile</Link>
+                <Link to="/dashboard" className="hover:text-text-primary text-text-secondary">Dashboard</Link>
+                <Link to="/feed" className="hover:text-text-primary text-text-secondary">Feed</Link>
+                <Link to="/profile" className="hover:text-text-primary text-text-secondary">Profile</Link>
                 {user?.role === 'admin' && (
-                  <Link to="/admin" className="hover:text-indigo-200">Admin</Link>
+                  <Link to="/admin" className="hover:text-text-primary text-text-secondary">Admin</Link>
                 )}
               </div>
             )}
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
                 <span className="hidden md:inline">Welcome, {user?.username}</span>
                 <button 
                   onClick={handleLogout}
-                  className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded"
+                  className="bg-primary hover:bg-indigo-400 text-white px-4 py-2 rounded"
                 >
                   Logout
                 </button>
@@ -43,13 +43,13 @@ const Navbar: React.FC = () => {
               <>
                 <Link 
                   to="/login" 
-                  className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded"
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded"
                 >
                   Login
                 </Link>
                 <Link 
                   to="/register" 
-                  className="bg-white hover:bg-gray-100 text-indigo-600 px-4 py-2 rounded"
+                  className="bg-secondary hover:bg-secondary-hover text-text-secondary px-4 py-2 rounded"
                 >
                   Register
                 </Link>

@@ -16,15 +16,15 @@ const LoginForm: React.FC = () => {
     try {
       await login({ email, password });
       navigate('/dashboard');
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message || 'Failed to login');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="max-w-md mx-auto bg-shell md:h-130 md:w-1/2 rounded-lg shadow-md overflow-hidden">
       <div className="px-6 py-8">
-        <h2 className="text-center text-3xl font-bold text-gray-700 mb-6">Login</h2>
+        <h2 className="text-center text-3xl font-bold text-text-primary mb-6">Login</h2>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            <label className="block text-text-secondary text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
             <input
@@ -42,13 +42,13 @@ const LoginForm: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-input-bg appearance-none border rounded w-full py-2 px-3 text-text-secondary  leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
           
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            <label className="block text-text-secondary  text-sm font-bold mb-2" htmlFor="password">
               Password
             </label>
             <input
@@ -56,7 +56,7 @@ const LoginForm: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none bg-input-bg border rounded w-full py-2 px-3 text-text-secondary  leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
@@ -65,7 +65,7 @@ const LoginForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full ${
+              className={`bg-primary hover:bg-primary-hover text-text-primary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >

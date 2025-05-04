@@ -6,7 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 function App() {
 
   return (
-    <>
+    <div className='bg-surface'>
     <BrowserRouter>
       <Routes>
         <Route path='/login' element={<LoginPage/>}/>
@@ -14,7 +14,7 @@ function App() {
       </Routes>
     </BrowserRouter>
 
-    </>
+    </div>
   )
 }
 

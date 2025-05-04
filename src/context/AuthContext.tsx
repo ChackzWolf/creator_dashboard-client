@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const data = await loginUser(credentials);
       dispatch({ type: 'LOGIN_SUCCESS', payload: data });
-    } catch (error) {
+    } catch (error:any) {
       dispatch({ type: 'LOGIN_FAIL', payload: error.message });
     }
   };
@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await registerUser(data);
       dispatch({ type: 'REGISTER_SUCCESS', payload: response });
-    } catch (error) {
+    } catch (error:any) {
       dispatch({ type: 'REGISTER_FAIL', payload: error.message });
     }
   };
