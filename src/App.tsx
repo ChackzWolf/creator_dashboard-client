@@ -5,6 +5,8 @@ import { AuthContext } from './context/AuthContext'
 import { useContext, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useAuth } from './hooks/useAuth';
+import Dashboard from './pages/Dashboard';
+import Feed from './pages/Feed';
 
 function App() {
     const { isAuthenticated } = useAuth();
@@ -25,7 +27,8 @@ console.log(' isAuthenticated' , isAuthenticated)
       <Routes>
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<RegisterPage/>}/>
-        <Route path='/dashboard' element={<div></div>}/>
+        <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/feed' element={<Feed/>}/>
       </Routes>
       <ToastContainer/>
     </BrowserRouter>
