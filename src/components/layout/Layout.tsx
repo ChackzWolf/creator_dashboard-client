@@ -39,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({
 
   // For login and register pages, only show the navbar
   if (location.pathname === '/login' || location.pathname === '/register') {
+    if(isAuthenticated) return <Navigate to="/dashboard" replace />;
     console.log(location.pathname, 'location path name')
     return (
       <div className="min-h-screen bg-surface">

@@ -39,11 +39,14 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       };
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
-      localStorage.setItem('token', action.payload.token);
+      localStorage.setItem('token', action.payload.data.token);
+
+      console.log('token', action.payload.data.token)
+      console.log('the item', localStorage.getItem('token'))
       return {
         ...state,
-        user: action.payload.user,
-        token: action.payload.token,
+        user: action.payload.data.user,
+        token: action.payload.data.token,
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -111,11 +114,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: LoginCredentials) => {
     dispatch({ type: 'LOGIN_START' });
+    console.log('starting loging in')
     try {
-      const data = await loginUser(credentials);
-      dispatch({ type: 'LOGIN_SUCCESS', payload: data });
+      const response = await loginUser(credentials);
+      console.log(response, 'response')
+      if(!response.success){
+        console.log(response.message, 'error message');
+        throw new Error(response.message)
+      }
+      dispatch({ type: 'LOGIN_SUCCESS', payload: response });
     } catch (error:any) {
-      dispatch({ type: 'LOGIN_FAIL', payload: error.message });
+      dispatch({ type: 'LOGIN_FAIL', payload: error.error });
     }
   };
 
@@ -123,11 +132,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'REGISTER_START' });
     try {
       const response = await registerUser(data);
+      if(!response.success){
+        console.log(response.message, 'error message');
+        throw new Error(response.message)
+      }
       dispatch({ type: 'REGISTER_SUCCESS', payload: response });
+      
     } catch (error:any) {
-      dispatch({ type: 'REGISTER_FAIL', payload: error.message });
+      console.log('error occured',error, 'fromt ')
+      dispatch({ type: 'REGISTER_FAIL', payload: error.error });
     }
   };
+  
 
   const logout = () => {
     dispatch({ type: 'LOGOUT' });

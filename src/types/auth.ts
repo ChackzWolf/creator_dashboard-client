@@ -28,7 +28,12 @@ export interface User {
     confirmPassword: string;
   }
   
-  export interface AuthResponse {
-    user: User;
-    token: string;
-  }
+export interface AuthResponse {
+  success: boolean;
+  data: {
+    user: User,
+    token:string;
+  };
+  message: string;
+  error?: string;  // Optional in case of an error response
+}
