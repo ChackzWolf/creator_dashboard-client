@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
 
   useEffect(() => {
-    fetchSavedItems();
+    // fetchSavedItems();
     
     // Fetch recent activities (mock for now)
     setTimeout(() => {
@@ -24,21 +24,21 @@ const Dashboard: React.FC = () => {
       const mockActivities: UserActivity[] = [
         {
           id: '1',
-          userId: user?.id || '',
+          userId: user?._id || '',
           type: 'login',
           metadata: {},
           createdAt: new Date().toISOString(),
         },
         {
           id: '2',
-          userId: user?.id || '',
+          userId: user?._id || '',
           type: 'profile_update',
           metadata: { description: 'Updated profile picture' },
           createdAt: new Date(Date.now() - 86400000).toISOString(),
         },
         {
           id: '3',
-          userId: user?.id || '',
+          userId: user?._id || '',
           type: 'saved_post',
           metadata: { source: 'twitter' },
           createdAt: new Date(Date.now() - 172800000).toISOString(),
@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
       setActivities(mockActivities);
       setIsLoadingActivities(false);
     }, 1000);
-  }, [fetchSavedItems, user?.id]);
+  }, [fetchSavedItems, user?._id]);
 
   // Filter items to get only saved ones
   const savedFeedItems = items.filter(item => savedItems.includes(item.id));
@@ -70,11 +70,11 @@ const Dashboard: React.FC = () => {
           
           {/* Saved Feed Items */}
           <div className="lg:col-span-1">
-            <SavedFeeds 
+            {/* <SavedFeeds 
               items={savedFeedItems}
               isLoading={isLoadingFeed}
               onUnsave={unsaveItem}
-            />
+            /> */}
           </div>
           
           {/* Recent Activity */}

@@ -33,6 +33,8 @@ const Layout: React.FC<LayoutProps> = ({
 
   // Check admin role
   if (adminOnly && user?.role !== 'admin') {
+
+    console.log('return <Navigate to="/dashboard" replace />;')
     return <Navigate to="/dashboard" replace />;
   }
   console.log(location.pathname, 'location path name')

@@ -46,12 +46,12 @@ type FeedAction =
   | { type: 'UNSAVE_ITEM'; payload: string }
   | { type: 'UPDATE_FILTERS'; payload: Partial<FeedFilters> };
 
-interface FeedState {
-  items: FeedItem[];
-  isLoading: boolean;
-  error: string | null;
-  savedItems: string[];
-}
+// interface FeedState {
+//   items: FeedItem[];
+//   isLoading: boolean;
+//   error: string | null;
+//   savedItems: string[];
+// }
 
 interface FeedStateExtended extends FeedState {
   sources: FeedSource[];
@@ -156,7 +156,7 @@ export const FeedContext = createContext<FeedContextType>({
   updateFilters: () => {},
 });
 
-export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const [state, dispatch] = useReducer(feedReducer, { 
     ...initialState, 
@@ -167,15 +167,19 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchFeed = async (filters?: FeedFilters) => {
     dispatch({ type: 'FETCH_START' });
     try {
+      console.log('1feed')
       const filtersToUse = filters || state.currentFilters;
       const items = await getFeedItems(filtersToUse);
+      console.log('fetch item', items)
       dispatch({ type: 'FETCH_SUCCESS', payload: items });
-    } catch (error) {
+    } catch (error:any) {
       dispatch({ type: 'FETCH_ERROR', payload: error.message });
     }
   };
 
   const fetchSavedItems = async () => {
+    console.log('2feed')
+
     if (!isAuthenticated) return;
     
     dispatch({ type: 'FETCH_SAVED_START' });
@@ -185,7 +189,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
         type: 'FETCH_SAVED_SUCCESS', 
         payload: items.map(item => item.id)
       });
-    } catch (error) {
+    } catch (error:any) {
       dispatch({ type: 'FETCH_SAVED_ERROR', payload: error.message });
     }
   };
@@ -201,6 +205,8 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const unsaveItem = async (itemId: string) => {
     try {
+      console.log('3feed')
+
       await unsaveFeedItem(itemId);
       dispatch({ type: 'UNSAVE_ITEM', payload: itemId });
     } catch (error) {
@@ -210,6 +216,8 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const reportItem = async (itemId: string, reason: string) => {
     try {
+      console.log('4feed')
+
       await reportFeedItem(itemId, reason);
       // No need to update state here, just notify user
     } catch (error) {
@@ -220,15 +228,19 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchSources = async () => {
     dispatch({ type: 'FETCH_SOURCES_START' });
     try {
+      console.log('5feed')
+
       const sources = await getFeedSources();
       dispatch({ type: 'FETCH_SOURCES_SUCCESS', payload: sources });
-    } catch (error) {
+    } catch (error:any) {
       dispatch({ type: 'FETCH_SOURCES_ERROR', payload: error.message });
     }
   };
 
   const toggleSource = async (sourceId: string, enabled: boolean) => {
     try {
+      console.log('7feed')
+
       await toggleFeedSource(sourceId, enabled);
       // Refresh sources after toggle
       fetchSources();
@@ -238,12 +250,14 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateFilters = (filters: Partial<FeedFilters>) => {
+    console.log('8feed')
+
     dispatch({ type: 'UPDATE_FILTERS', payload: filters });
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchSavedItems();
+      // fetchSavedItems();
       fetchSources();
     }
   }, [isAuthenticated]);
@@ -268,3 +282,5 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </FeedContext.Provider>
   );
 };
+
+export default FeedProvider

@@ -32,7 +32,7 @@ export const useCredits = (): UseCreditsReturn => {
       
       setCreditStats(stats);
       setTransactions(txns);
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message || 'Failed to fetch credit information');
     } finally {
       setIsLoading(false);
@@ -53,7 +53,7 @@ export const useCredits = (): UseCreditsReturn => {
         : await getCreditStats();
         
       return stats;
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message || 'Failed to fetch credit information');
       return null;
     } finally {
@@ -76,11 +76,11 @@ export const useCredits = (): UseCreditsReturn => {
     try {
       const result = await adjustUserCredits(userId, amount, reason);
       // If we successfully adjusted credits for the current user, refresh their stats
-      if (result && user.id === userId) {
+      if (result && user._id === userId) {
         fetchCredits();
       }
       return result;
-    } catch (err) {
+    } catch (err:any) {
       setError(err.message || 'Failed to adjust credits');
       return false;
     } finally {

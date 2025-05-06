@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import { AuthContext } from './context/AuthContext'
@@ -7,6 +7,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useAuth } from './hooks/useAuth';
 import Dashboard from './pages/Dashboard';
 import Feed from './pages/Feed';
+import Profile from './pages/Profile';
+import RedditCallback from './SocialCallbacks/RedditCallback';
 
 function App() {
     const { isAuthenticated } = useAuth();
@@ -29,6 +31,9 @@ console.log(' isAuthenticated' , isAuthenticated)
         <Route path='/register' element={<RegisterPage/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
         <Route path='/feed' element={<Feed/>}/>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/reddit-callback" element={<RedditCallback />} />
+        {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
       </Routes>
       <ToastContainer/>
     </BrowserRouter>

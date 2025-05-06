@@ -31,7 +31,7 @@ const RegisterForm: React.FC = () => {
     try {
       console.log('formdata', formData)
       await register(formData);
-      // navigate('/dashboard');
+      navigate('/dashboard');
     } catch (err:any) {
       setError(err.message || 'Failed to register');
     }

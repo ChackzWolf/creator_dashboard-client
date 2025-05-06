@@ -1,10 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import FeedList from '../components/feed/DeedList';
 import FeedActions from '../components/feed/FeedActions';
 import { useFeed } from '../hooks/useFeed';
+import { RedditPostSelector } from '../components/social/Redditpost';
+import { FaRedditAlien } from 'react-icons/fa6';
 
 const Feed: React.FC = () => {
+  const [redditPostView, setRedditPostView] = useState<boolean>(false)
+  function handleRedditPostViewClick(){
+    setRedditPostView(true)
+  }
   const {
     items,
     isLoading,
@@ -18,8 +24,9 @@ const Feed: React.FC = () => {
   } = useFeed();
 
   useEffect(() => {
+    console.log('triggereing , fetch feed')
     fetchFeed();
-  }, [fetchFeed]);
+  }, []);
 
   const handleFiltersChange = (newFilters: Partial<typeof currentFilters>) => {
     updateFilters(newFilters);
@@ -40,11 +47,25 @@ const Feed: React.FC = () => {
     alert('Thank you for reporting. We will review this content.');
   };
 
+  const hideRedditPosts = () => {
+    setRedditPostView(false)
+  }
+
   return (
     <Layout requireAuth>
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Feed</h1>
-        
+        <h1 className="text-2xl font-bold mb-6 text-text-primary">Feed</h1>
+        <div className=' pb-2 flex justify-end'>
+            <button className='transition-all duration-150 bg-orange-500 rounded-3xl text-text-primary p-1 cursor-pointer hover:scale-102 px-2 font-bold flex justify-center items-center gap-2' onClick={handleRedditPostViewClick}>
+               <FaRedditAlien className='text-3xl'/>Add post
+            </button>
+        </div>
+
+       
+        <div className={`transition-all duration-150 ${redditPostView ? 'scale-100': 'scale-0 hidden' } overflow-hidden`}>
+                  <RedditPostSelector hide={hideRedditPosts}/>
+        </div>
+      
         <FeedActions
           filters={currentFilters}
           sources={sources}

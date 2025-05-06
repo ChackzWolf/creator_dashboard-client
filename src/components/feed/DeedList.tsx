@@ -51,7 +51,7 @@ const FeedList: React.FC<FeedListProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex mt-3 gap-5">
       {items.map((item) => (
         <FeedCard
           key={item.id}

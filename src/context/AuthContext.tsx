@@ -11,7 +11,7 @@ interface AuthContextType extends AuthState {
 const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem('token') ? true: false ,
   isLoading: false,
   error: null,
 };
@@ -40,7 +40,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
       localStorage.setItem('token', action.payload.data.token);
-
+      
       console.log('token', action.payload.data.token)
       console.log('the item', localStorage.getItem('token'))
       return {
@@ -52,6 +52,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         error: null,
       };
     case 'SET_USER':
+      localStorage.setItem('userId', action.payload._id);
+      console.log(action.payload, 'payloaddddd')
       return {
         ...state,
         user: action.payload,
@@ -92,7 +94,7 @@ export const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
@@ -100,8 +102,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (state.token) {
         try {
           const user = await getCurrentUser();
+          console.log('now user  is', user);
           dispatch({ type: 'SET_USER', payload: user });
         } catch (error) {
+console.log('no user found')
           dispatch({ type: 'AUTH_ERROR' });
         }
       } else {
@@ -162,3 +166,5 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider
