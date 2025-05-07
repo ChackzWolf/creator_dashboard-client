@@ -5,6 +5,7 @@ import FeedActions from '../components/feed/FeedActions';
 import { useFeed } from '../hooks/useFeed';
 import { RedditPostSelector } from '../components/social/Redditpost';
 import { FaRedditAlien } from 'react-icons/fa6';
+import { toast } from 'react-toastify';
 
 const Feed: React.FC = () => {
   const [redditPostView, setRedditPostView] = useState<boolean>(false)
@@ -42,9 +43,10 @@ const Feed: React.FC = () => {
     }
   };
 
-  const handleReport = (itemId: string) => {
-    reportItem(itemId, 'Inappropriate content');
-    alert('Thank you for reporting. We will review this content.');
+  const handleReport = (data:any) => {
+    console.log(data)
+    reportItem(data, 'Inappropriate content');
+    toast.success('Thankyou for your feedback. We will review and take the right decision.')
   };
 
   const hideRedditPosts = () => {
@@ -53,7 +55,7 @@ const Feed: React.FC = () => {
 
   return (
     <Layout requireAuth>
-      <div className="container mx-auto">
+      <div className="container mx-auto ">
         <h1 className="text-2xl font-bold mb-6 text-text-primary">Feed</h1>
         <div className=' pb-2 flex justify-end'>
             <button className='transition-all duration-150 bg-orange-500 rounded-3xl text-text-primary p-1 cursor-pointer hover:scale-102 px-2 font-bold flex justify-center items-center gap-2' onClick={handleRedditPostViewClick}>

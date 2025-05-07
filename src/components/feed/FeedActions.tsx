@@ -25,10 +25,10 @@ const FeedActions: React.FC<FeedActionsProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div className="bg-shell rounded-lg shadow-sm p-4 mb-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
-          <span className="text-sm font-medium text-gray-700">Sources:</span>
+          <span className="text-sm font-medium text-text-secondary">Sources:</span>
           <div className="flex space-x-2">
             {sources.map((source) => (
               <button
@@ -36,7 +36,7 @@ const FeedActions: React.FC<FeedActionsProps> = ({
                 onClick={() => handleSourceToggle(source.name)}
                 className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                   filters.sources.includes(source.name)
-                    ? 'bg-indigo-100 text-indigo-700'
+                    ? 'bg-text-secondary text-indigo-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -50,7 +50,7 @@ const FeedActions: React.FC<FeedActionsProps> = ({
           <select
             value={filters.sortBy}
             onChange={(e) => onFiltersChange({ sortBy: e.target.value as FeedFilters['sortBy'] })}
-            className="border border-gray-300 rounded px-3 py-1 text-sm"
+            className="border border-gray-300 rounded px-3 py-1 text-sm text-gray-500"
           >
             <option value="recent">Most Recent</option>
             <option value="popular">Most Popular</option>

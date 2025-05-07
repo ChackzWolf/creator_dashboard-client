@@ -23,10 +23,10 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-800 text-white w-64 flex-shrink-0 min-h-screen">
+    <div className="bg-shell text-white w-52 flex-shrink-0 min-h-screen">
       <div className="p-4">
         <div className="text-center py-4">
-          <div className="w-20 h-20 rounded-full bg-indigo-500 mx-auto mb-2 flex items-center justify-center text-xl">
+          <div className="w-20 h-20 rounded-full bg-gray-500 mx-auto mb-2 flex items-center justify-center text-xl">
             {user?.profilePicture ? (
               <img src={user.profilePicture} alt="Profile" className="w-full h-full rounded-full object-cover" />
             ) : (
@@ -40,7 +40,7 @@ const Sidebar: React.FC = () => {
         <div className="bg-gray-700 rounded-lg p-4 mb-6">
           <h3 className="text-gray-400 text-xs uppercase font-semibold mb-2">Credit Balance</h3>
           <div className="flex items-center">
-            <span className="text-2xl font-bold text-indigo-300">
+            <span className="text-2xl font-bold text-gray-300">
               {creditStats?.total || 0}
             </span>
             <span className="ml-2 text-xs text-gray-400">credits</span>
@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
                   to={item.path}
                   className={`flex items-center px-4 py-2 rounded-md ${
                     isActive(item.path)
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-gray-600 text-white'
                       : 'text-gray-300 hover:bg-gray-700'
                   }`}
                 >

@@ -9,35 +9,54 @@ import Dashboard from './pages/Dashboard';
 import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import RedditCallback from './SocialCallbacks/RedditCallback';
+import { UserRole } from './types/userRoles';
+import ReportedPostsPage from './components/Admin/PostReports';
+import AdminLoginPage from './pages/Admin/AdminLoginPage';
+import { AdminAuthProvider } from './hooks/useAdminAuth';
+import AdminRoute from './components/Admin/auth/AdminRoute';
+import AdminLayout from './components/Admin/layout/adminLayout';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 
 function App() {
-    const { isAuthenticated } = useAuth();
-  
+
   const { error } = useContext(AuthContext);
 
-useEffect(() => {
-  if (error) {
-    console.log(' new error:' , error)
-    toast.error(error);
-  }
-}, [error]);
-console.log(' isAuthenticated' , isAuthenticated)
-  
+  useEffect(() => {
+    if (error) {
+      console.log(' new error:', error)
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <div className='bg-surface'>
     <BrowserRouter>
-      <Routes>
-        <Route path='/login' element={<LoginPage/>}/>
-        <Route path='/register' element={<RegisterPage/>}/>
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/feed' element={<Feed/>}/>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/reddit-callback" element={<RedditCallback />} />
-        {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
-      </Routes>
-      <ToastContainer/>
-    </BrowserRouter>
-
+  <AdminAuthProvider>
+    <Routes>
+      {/* All your existing routes */}
+      <Route path='/login' element={<LoginPage role={UserRole.User} />} />
+      <Route path='/register' element={<RegisterPage />} />
+      <Route path='/dashboard' element={<Dashboard />} />
+      <Route path='/feed' element={<Feed />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/reddit-callback" element={<RedditCallback />} />
+      
+      {/* Admin routes */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin/dashboard" element={
+        <AdminRoute>
+          <AdminLayout>
+            <AdminDashboard />
+          </AdminLayout>
+        </AdminRoute>
+      } />
+      
+      {/* Redirect admin root */}
+      <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+    </Routes>
+  </AdminAuthProvider>
+  <ToastContainer />
+</BrowserRouter>
     </div>
   )
 }

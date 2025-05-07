@@ -53,6 +53,7 @@ export const RedditPostSelector: React.FC<RedditPostSelectorProps> = ({ hide, on
       setError(null);
 
       const response = await api.get<ApiResponse<RedditPost[]>>(`/user/RedditPosts`);
+      console.log(response , '///////////////////////////')
 
       if (response.data.success && response.data.data) {
         setPosts(response.data.data);

@@ -4,10 +4,10 @@ import FeedCard from './DeedCard';
 
 interface FeedListProps {
   items: FeedItem[];
-  onSave: (itemId: string) => void;
-  onUnsave: (itemId: string) => void;
-  onShare: (itemId: string) => void;
-  onReport: (itemId: string) => void;
+  onSave?: (itemId: string) => void;
+  onUnsave?: (itemId: string) => void;
+  onShare?: (itemId: string) => void;
+  onReport?: (data: any) => void;
   isLoading: boolean;
 }
 
@@ -49,9 +49,9 @@ const FeedList: React.FC<FeedListProps> = ({
       </div>
     );
   }
-
+console.log(items[0], 'items')
   return (
-    <div className="flex mt-3 gap-5">
+    <div className="flex mt-3 gap-5 flex-wrap justify-self-center  ">
       {items.map((item) => (
         <FeedCard
           key={item.id}

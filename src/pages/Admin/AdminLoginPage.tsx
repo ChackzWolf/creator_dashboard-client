@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { UserRole } from '../../types/userRoles';
-import { adminLogin } from '../../api/auth';
+import { useAdminAuth } from '../../hooks/useAdminAuth';
 import { toast } from 'react-toastify';
 
-const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
+const AdminLoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, isLoading } = useAuth();
+  const { login, isLoading } = useAdminAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,26 +15,24 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
     setError('');
     
     try {
-      await login({ email, password });
-      if(UserRole.User) navigate('/dashboard');
-      else {
-        const response = await adminLogin({email,password});
-        console.log('login reponse admin', response)
-        if(response.success) {
-          navigate('/admin/dashboard');
-        }else {
-          toast.error(response.error)
-        }
+      const result = await login({ email, password });
+      if (result.success) {
+        navigate('/admin/dashboard');
+      } else {
+        setError(result.error || 'Failed to login');
+        toast.error(result.error || 'Failed to login');
       }
-    } catch (err:any) {
-      setError(err.message || 'Failed to login');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to login';
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
   return (
     <div className="max-w-md mx-auto bg-shell md:h-130 md:w-1/2 rounded-lg shadow-md overflow-hidden">
       <div className="px-6 py-8">
-        <h2 className="text-center text-3xl font-bold text-text-primary mb-6">{UserRole.Admin === role && 'Admin '}Login</h2>
+        <h2 className="text-center text-3xl font-bold text-text-primary mb-6">Admin Login</h2>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -47,28 +43,28 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-text-secondary text-sm font-bold mb-2" htmlFor="email">
-              Email
+              Admin Email
             </label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="shadow bg-input-bg appearance-none border rounded w-full py-2 px-3 text-text-secondary  leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-input-bg appearance-none border rounded w-full py-2 px-3 text-text-secondary leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
           
           <div className="mb-6">
-            <label className="block text-text-secondary  text-sm font-bold mb-2" htmlFor="password">
-              Password
+            <label className="block text-text-secondary text-sm font-bold mb-2" htmlFor="password">
+              Admin Password
             </label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none bg-input-bg border rounded w-full py-2 px-3 text-text-secondary  leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none bg-input-bg border rounded w-full py-2 px-3 text-text-secondary leading-tight focus:outline-none focus:shadow-outline"
               required
             />
           </div>
@@ -81,16 +77,16 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : 'Admin Login'}
             </button>
           </div>
         </form>
         
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-800">
-              Register
+            Need a user account?{' '}
+            <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
+              User Login
             </Link>
           </p>
         </div>
@@ -99,4 +95,4 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
   );
 };
 
-export default LoginForm;
+export default AdminLoginForm;

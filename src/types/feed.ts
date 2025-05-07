@@ -23,6 +23,9 @@ export interface FeedSource {
     comments: number;
     shares: number;
     isSaved: boolean;
+    isLiked: boolean;
+    platformData:any
+    userId:string
   }
   
   export interface FeedState {

@@ -16,7 +16,7 @@ interface FeedContextType extends FeedState {
   fetchSavedItems: () => Promise<void>;
   saveItem: (itemId: string) => Promise<void>;
   unsaveItem: (itemId: string) => Promise<void>;
-  reportItem: (itemId: string, reason: string) => Promise<void>;
+  reportItem: (data: any, reason: string) => Promise<void>;
   sources: FeedSource[];
   fetchSources: () => Promise<void>;
   toggleSource: (sourceId: string, enabled: boolean) => Promise<void>;
@@ -214,12 +214,11 @@ const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   };
 
-  const reportItem = async (itemId: string, reason: string) => {
+  const reportItem = async (data: any, reason: string) => {
     try {
       console.log('4feed')
 
-      await reportFeedItem(itemId, reason);
-      // No need to update state here, just notify user
+      await reportFeedItem(data);
     } catch (error) {
       console.error('Error reporting item:', error);
     }
@@ -257,7 +256,7 @@ const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   useEffect(() => {
     if (isAuthenticated) {
-      // fetchSavedItems();
+      fetchSavedItems();
       fetchSources();
     }
   }, [isAuthenticated]);

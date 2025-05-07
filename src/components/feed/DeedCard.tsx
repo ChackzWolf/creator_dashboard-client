@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FeedItem } from '../../types/feed';
-import { FaReddit } from 'react-icons/fa6';
+import { FaReddit, FaRegCopy, FaShare } from 'react-icons/fa6';
 import { BsReddit } from 'react-icons/bs';
+import { AiFillLike, AiTwotoneLike } from 'react-icons/ai';
+import { GoBookmark, GoBookmarkFill } from 'react-icons/go';
+import { MdMoreVert } from 'react-icons/md';
+import { BiLike, BiSolidLike } from 'react-icons/bi';
+import { RiShareForwardLine } from 'react-icons/ri';
+import { saveFeedItem, toggleFeedLike } from '../../api/feed';
+import { MediaRenderer } from './FeedItemMedia';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { handleRedirectToReddit } from './MediaRenderer';
 
 interface FeedCardProps {
     item: FeedItem;
-    onSave: (itemId: string) => void;
-    onUnsave: (itemId: string) => void;
-    onShare: (itemId: string) => void;
-    onReport: (itemId: string) => void;
+    onSave?: (itemId: string) => void;
+    onUnsave?: (itemId: string) => void;
+    onShare?: (itemId: string) => void;
+    onReport?: (data:any) => void;
     compact?: boolean;
 }
 
@@ -22,14 +31,50 @@ const FeedCard: React.FC<FeedCardProps> = ({
 }) => {
     const [showReportModal, setShowReportModal] = useState(false);
     const [reportReason, setReportReason] = useState('');
+    const [isLiked, setIsLiked] = useState<boolean>(item.isLiked)
+    const [likeCount, setLikeCount] = useState<number>(item.likes)
+    const [isSaved, setIsSaved] = useState<boolean>(item.isSaved);
+    const [showMore, setShowMore] = useState<boolean>(false)
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+          if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            setShowMore(false);
+          }
+        }
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
 
     const handleReport = () => {
         if (reportReason.trim()) {
-            onReport(item.id);
+            const data :any= {
+                reportedUser: item.userId,
+                postId:item.id,
+                reason: reportReason,
+                status: 'pending',
+                adminNotes: '',
+            }
+            onReport(data as any);
             setShowReportModal(false);
             setReportReason('');
         }
     };
+
+    if (item.media) {
+        item.media = item.media.map(media => {
+            if (media.url && media.url.includes('&amp;')) {
+                return { ...media, url: media.url.replace(/&amp;/g, '&') };
+            }
+            return media;
+        });
+    }
+
+
 
     const getSourceIcon = (source: FeedItem['source']) => {
         switch (source) {
@@ -45,10 +90,35 @@ const FeedCard: React.FC<FeedCardProps> = ({
         }
     };
 
+    const handleLike = async (id: string) => {
+        setIsLiked(await toggleFeedLike(id))
+        !isLiked ? setLikeCount(likeCount + 1) : setLikeCount(likeCount - 1)
+    }
+
+    const handleToggleSavePost = async (postId: string) => {
+        setIsSaved(await saveFeedItem(postId))
+    }
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+          if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            setShowMore(false);
+          }
+        }
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
+
+
+
     return (
         <>
-            <div className={`transition-all duration-300 bg-white rounded-lg hover:scale-102 shadow-sm p-2 hover:shadow-md w-1/5`}>
-                <div className="flex   h-full">
+            <div className={`transition-all duration-300 bg-shell rounded-lg hover:scale-102 shadow-2xl shad p-2 hover:shadow-md w-72 relative shadow-gray-900`}>
+
+                <div className="flex h-full">
                     {item.author.avatar && (
                         <img
                             src={item.author.avatar}
@@ -56,13 +126,13 @@ const FeedCard: React.FC<FeedCardProps> = ({
                             className="w-10 h-auto rounded-full"
                         />
                     )}
-                    <div className="flex flex-col ">
-                        <div className=' w-full'>
+                    <div className="flex flex-col w-full h-full">
+                        <div className=' w-full h-full'>
                             <div className="flex items-center justify-between">
                                 <div className='w-full'>
                                     <div className='flex w-full '>
                                         <div>
-                                            <p className="font-semibold">{item.author.name}</p>
+                                            <p className="font-semibold text-text-primary">{item.author.name}</p>
                                         </div>
                                         <div className="flex-grow"></div>
 
@@ -75,22 +145,82 @@ const FeedCard: React.FC<FeedCardProps> = ({
                                             <span className="text-lg">{getSourceIcon(item.source)}</span>
                                         </div>
                                     </div>
+                                    <div className='flex justify-between'>
+                                        <div>
+                                            {item.author.username && (
+                                                <p className="text-sm text-gray-500">@{item.author.username}</p>
+                                            )}
+                                        </div>
+                                        <button className='transition-all duration-150 text-text-primary rounded-full hover:bg-gray-800 mt-1 cursor-pointer text-xl' onClick={()=> setShowMore(true)}>
+                                            <FiMoreHorizontal />
+                                        </button>
+                                        {showMore && (
+                                            <div ref={popupRef} className="absolute right-2 top-10 z-50 bg-primary border border-text-secondary rounded shadow-md p-2 w-40">
+                                                <button className="block rounded-xs w-full text-left text-sm p-1 hover:bg-gray-700 text-text-secondary" 
+                                                        onClick={()=> {
+                                                                    setShowMore(false)
+                                                                    handleRedirectToReddit(item)
+                                                        }}>
+                                                        Visit
+                                                </button>
+                                                <button className="block rounded-xs w-full text-left text-sm p-1 hover:bg-gray-700 text-text-secondary">Share</button>
+                                                <button className="block rounded-xs w-full text-left text-sm p-1 hover:bg-gray-700 text-text-secondary" onClick={() => setShowReportModal(true)}>Report</button>
+                                            </div>
+                                        )}
 
-                                    {item.author.username && (
-                                        <p className="text-sm text-gray-500">@{item.author.username}</p>
-                                    )}
+                                    </div>
+
                                 </div>
 
                             </div>
 
-                            <p className={`mt-2 text-sm text-gray-600 ${compact ? 'line-clamp-2' : ''}`}>
+                            <p className={`mt-2 text-sm text-gray-600 ${compact ? 'line-clamp-2' : ''} break-words`}>
                                 {item.content}
                             </p>
-
-                            {item.media && item.media.length > 0 && (
+                            <MediaRenderer feedItem={item} />
+                            {/* {item.media && item.media.length > 0 && (
                                 <div className="mt-3 space-y-2">
+                                    {item.media.map((media, index) => {
+                                        // Skip media with errors
+                                        if (mediaErrors[media.url]) return null;
+
+                                        return (
+                                            <div key={`${item.id}-media-${index}`} className="relative rounded-lg overflow-hidden">
+                                                {media.type === 'image' ? (
+                                                    <img
+                                                        src={media.url}
+                                                        alt={`Content from ${item.author.name}`}
+                                                        className="w-full h-auto max-h-96 object-contain"
+                                                        onError={() => handleMediaError(media.url)}
+                                                    />
+                                                ) : media.url.includes('youtube.com/embed') ? (
+                                                    <iframe
+                                                        src={media.url}
+                                                        className="w-full aspect-video"
+                                                        title={`YouTube video`}
+                                                        allowFullScreen
+                                                        frameBorder="0"
+                                                    />
+                                                ) : (
+                                                    <video
+                                                        src={media.url}
+                                                        controls
+                                                        className="w-full"
+                                                        onError={() => handleMediaError(media.url)}
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )} */}
+
+                            {/* {item.media && item.media.length > 0 && (
+                                <div className="mt-3 space-y-2">
+
+
                                     {item.media.map((media, index) => (
-                                        <div key={index} className="relative rounded-lg overflow-hidden h-full">
+                                        <div key={index} className="relative rounded-lg overflow-hidden h-full ">
                                             {media.type === 'image' ? (
                                                 <img
                                                     src={media.url}
@@ -107,54 +237,67 @@ const FeedCard: React.FC<FeedCardProps> = ({
                                         </div>
                                     ))}
                                 </div>
-                            )}
+                            )} */}
                         </div>
-                        <div className="flex-grow"></div>
+                        {/* <div className="flex-grow"></div> */}
 
                         <div className=' '>
                             <div className="mt-4 flex items-center justify-between">
-                                <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                    <span>❤️ {item.likes}</span>
-                                    <span>💬 {item.comments}</span>
-                                    <span>🔄 {item.shares}</span>
+                                <div className="flex items-center  text-gray-500 text-xl">
+                                    <button className='flex justify-center items-center gap-1 text-md' onClick={() => handleLike(item.id)}>
+                                        {!isLiked ? <BiLike className='hover:scale-105 cursor-pointer ' /> : <BiSolidLike className='hover:scale-105 cursor-pointer text-md' />}
+
+                                    </button>
+                                    {/* <span>💬 {item.comments}</span> */}
                                 </div>
 
                                 <div className="flex items-center space-x-2">
-                                    {item.isSaved ? (
+                                    <span className='flex justify-center items-center gap-1 text-sm text-gray-500'>
+                                        <RiShareForwardLine className='hover:scale-105 cursor-pointer text-2xl' />
+                                    </span>
+                                    {isSaved ? (
                                         <button
-                                            onClick={() => onUnsave(item.id)}
-                                            className="p-2 text-yellow-500 hover:text-yellow-600"
+                                            onClick={() => handleToggleSavePost(item.id)}
+                                            className="p-2 text-gray-500 hover:text-gray-600 text-xl cursor-pointer"
                                             title="Unsave"
                                         >
-                                            ★
+                                            <GoBookmarkFill />
+
+
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => onSave(item.id)}
-                                            className="p-2 text-gray-400 hover:text-yellow-500"
+                                            onClick={() => handleToggleSavePost(item.id)}
+                                            className="p-2 text-gray-500 hover:text-gray-600 text-xl cursor-pointer"
                                             title="Save"
                                         >
-                                            ☆
+                                            <GoBookmark />
                                         </button>
                                     )}
-
+                                    {/* 
                                     <button
                                         onClick={() => onShare(item.id)}
-                                        className="p-2 text-gray-400 hover:text-blue-500"
+                                        className="p-2 text-gray-400 hover:text-blue-500 cursor-pointer"
                                         title="Share"
                                     >
-                                        🔗
-                                    </button>
+                                        <FaRegCopy />
 
-                                    <button
+                                    </button> */}
+
+                                    {/* <button
                                         onClick={() => setShowReportModal(true)}
                                         className="p-2 text-gray-400 hover:text-red-500"
                                         title="Report"
                                     >
                                         🚩
-                                    </button>
+                                    </button> */}
                                 </div>
                             </div>
+                            <div className='flex gap-4 justify-between'>
+                                <h1 className='text-xs text-gray-500'>{likeCount} likes</h1>
+                                <h1 className='text-xs text-gray-500'>{item.shares > 0 && `${item.shares} shares`}</h1>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -163,15 +306,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
             {/* Report Modal */}
             {showReportModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full">
-                        <h3 className="text-lg font-semibold mb-4">Report Content</h3>
-                        <p className="text-sm text-gray-600 mb-4">
+                    <div className="bg-secondary rounded-lg p-6 max-w-md w-full">
+                        <h3 className="text-lg font-semibold mb-4 text-text-primary">Report Content</h3>
+                        <p className="text-sm mb-4 text-text-secondary">
                             Please provide a reason for reporting this content:
                         </p>
                         <textarea
                             value={reportReason}
                             onChange={(e) => setReportReason(e.target.value)}
-                            className="w-full border rounded-lg p-2 mb-4"
+                            className="w-full border rounded-lg border-text-secondary text-text-secondary p-2 mb-4 placeholder-text-secondary"
                             rows={3}
                             placeholder="Enter reason..."
                         />

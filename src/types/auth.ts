@@ -37,3 +37,19 @@ export interface AuthResponse {
   message: string;
   error?: string;  // Optional in case of an error response
 }
+
+export interface AdminAuthResponse {
+  success: boolean;
+  data: {
+    user: User,
+    token:string;
+  };
+  message: string;
+  error?: string;  // Optional in case of an error response
+}
+
+export interface Admin {
+  _id: string;
+  name: string;
+  email: string;
+}

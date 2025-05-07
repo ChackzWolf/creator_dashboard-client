@@ -1,15 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
-  const navigate = useNavigate();
-
+  const isAuthenticated = localStorage.getItem('adminAccessToken') ? true : false
   const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+    localStorage.removeItem('adminAccessToken')
+  }
 
   return (
     <nav className="bg-shell text-shell shadow-md">
@@ -19,19 +15,13 @@ const Navbar: React.FC = () => {
             <Link to="/" className="font-bold text-xl text-text-primary">Creator Dashboard</Link>
             {isAuthenticated && (
               <div className="hidden md:flex space-x-4">
-                <Link to="/dashboard" className="hover:text-text-primary text-text-secondary">Dashboard</Link>
-                <Link to="/feed" className="hover:text-text-primary text-text-secondary">Feed</Link>
-                <Link to="/profile" className="hover:text-text-primary text-text-secondary">Profile</Link>
-                {user?.role === 'admin' && (
                   <Link to="/admin" className="hover:text-text-primary text-text-secondary">Admin</Link>
-                )}
               </div>
             )}
           </div>
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <span className="hidden md:inline">Welcome, {user?.username}</span>
                 <button 
                   onClick={handleLogout}
                   className="bg-primary hover:bg-indigo-400 text-white px-4 py-2 rounded"
