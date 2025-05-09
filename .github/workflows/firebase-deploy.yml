@@ -2,7 +2,7 @@ name: Deploy to Firebase Hosting
 
 on:
   push:
-    branches: [ main ] # Change to your main branch name if different
+    branches: [ master ] # Change to your main branch name if different
 
 jobs:
   build_and_deploy:
