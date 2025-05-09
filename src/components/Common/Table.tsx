@@ -22,7 +22,7 @@ const Table: React.FC<TableProps> = ({ columns, data, title, path = null}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
-
+   console.log(path)
     const currentData = data.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage

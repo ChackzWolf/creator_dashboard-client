@@ -216,7 +216,7 @@ const FeedProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   };
 
-  const reportItem = async (data: any, reason: string) => {
+  const reportItem = async (data: any) => {
     try {
       console.log('4feed')
 

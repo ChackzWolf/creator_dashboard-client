@@ -24,7 +24,7 @@ interface IUser{
 function Users() {
   const navigate = useNavigate();
   const [users, setUsers] = useState<IUser[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [confirmTemplateVisible, setConfirmTemplateVisible] = useState(false)
   const [name, setName] = useState<string | null>(null);
   const [isBlocked, setIsBlocked] = useState<boolean | null>(null);
@@ -33,7 +33,7 @@ function Users() {
 
 
   useEffect(() => {
-      setIsLoading(true)
+      // setIsLoading(true)
       const fetchUsers = async () => {
         try {
           const users = await getUsers()
@@ -41,7 +41,7 @@ function Users() {
         } catch (error) {
           console.error("Error fetching course data:", error);
         }finally{
-          setIsLoading(false)
+          // setIsLoading(false)
         }
       };
   

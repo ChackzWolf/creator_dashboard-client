@@ -39,6 +39,8 @@ const FeedCard: React.FC<FeedCardProps> = ({
             setShowMore(false);
           }
         }
+
+        onShare
     
         document.addEventListener('mousedown', handleClickOutside);
         return () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
 
 // Global processing flag to handle component remounts
 const processingCodes = new Set();
@@ -11,7 +11,7 @@ const RedditCallback = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {

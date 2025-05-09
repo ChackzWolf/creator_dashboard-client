@@ -12,16 +12,16 @@ const Dashboard: React.FC = () => {
   const { creditStats, isLoading: isLoadingCredits } = useCredits();
   const { 
     fetchSavedItems, 
-    savedItems, 
-    items, 
+    // savedItems, 
+    // items, 
     isLoading: isLoadingFeed 
   } = useFeed();
   const [activities, setActivities] = useState<UserActivity[]>([]);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
-
   useEffect(() => {
     // fetchSavedItems();
-    
+      console.log(isLoadingFeed)
+
     // Fetch recent activities (mock for now)
     setTimeout(() => {
       // This would be an API call in a real application
@@ -53,8 +53,7 @@ const Dashboard: React.FC = () => {
     }, 1000);
   }, [fetchSavedItems, user?._id]);
 
-  // Filter items to get only saved ones
-  const savedFeedItems = items.filter(item => savedItems.includes(item.id));
+  // const savedFeedItems = items.filter(item => savedItems.includes(item.id));
 
   return (
     <Layout requireAuth>

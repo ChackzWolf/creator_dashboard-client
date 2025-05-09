@@ -1,5 +1,5 @@
 import React from 'react';
-import { CreditStats as CreditStatsType } from '../../types/credits';
+import { CreditStats as CreditStatsType } from '../../../types/credits';
 
 interface CreditStatsProps {
   stats: CreditStatsType;
@@ -57,7 +57,7 @@ const CreditStats: React.FC<CreditStatsProps> = ({ stats, isLoading }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {stats.transactions.slice(0, 5).map((transaction) => (
+            {stats.transactions.slice(0, 5).map((transaction:any) => (
               <tr key={transaction.id}>
                 <td className="py-2 px-4 whitespace-nowrap text-sm">
                   {new Date(transaction.createdAt).toLocaleDateString()}

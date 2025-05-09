@@ -24,7 +24,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
-  return <>{children}</>;
+  return <>{children}</>
 };
 
 export default AdminRoute;

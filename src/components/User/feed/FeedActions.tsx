@@ -1,5 +1,5 @@
 import React from 'react';
-import { FeedFilters, FeedSource } from '../../types/feed';
+import { FeedFilters, FeedSource } from '../../../types/feed';
 
 interface FeedActionsProps {
   filters: FeedFilters;
@@ -18,7 +18,7 @@ const FeedActions: React.FC<FeedActionsProps> = ({
 }) => {
   const handleSourceToggle = (sourceName: FeedSource['name']) => {
     const updatedSources = filters.sources.includes(sourceName)
-      ? filters.sources.filter((s) => s !== sourceName)
+      ? filters.sources.filter((s:any) => s !== sourceName)
       : [...filters.sources, sourceName];
     
     onFiltersChange({ sources: updatedSources });

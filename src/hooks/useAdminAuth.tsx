@@ -66,20 +66,20 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     checkAuth();
   }, []);
 
-  const updateReportStatus = async(reportId: string, status: string) => {
-    setIsLoading(true)
-    try {
-        const response = await adminApi.post('/admin/update-report-status', {reportId,status});
-        return response
-    } catch (error:any) {
-      return { 
-        success: false, 
-        error: error.error || 'Admin login failed' 
-      };
-    }finally {
-      setIsLoading(false)
-    }
-  }
+  // const updateReportStatus = async(reportId: string, status: string) => {
+  //   setIsLoading(true)
+  //   try {
+  //       const response = await adminApi.post('/admin/update-report-status', {reportId,status});
+  //       return response
+  //   } catch (error:any) {
+  //     return { 
+  //       success: false, 
+  //       error: error.error || 'Admin login failed' 
+  //     };
+  //   }finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
   const login = async (credentials: LoginCredentials): Promise<{success: boolean, error?: string}> => {
     setIsLoading(true);

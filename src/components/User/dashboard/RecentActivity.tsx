@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserActivity } from '../../types/credits';
+import { UserActivity } from '../../../types/credits';
 
 interface RecentActivityProps {
   activities: UserActivity[];

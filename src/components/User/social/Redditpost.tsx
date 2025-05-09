@@ -214,7 +214,7 @@ export const RedditPostSelector: React.FC<RedditPostSelectorProps> = ({ hide, on
         <button onClick={hide} className='text-text-primary  cursor-pointer'>Close</button>
       </div>
 
-
+{error && <h1 className='text-red-600'>{`Error : ${error}`}</h1>}
       {posts.length === 0 ? (
         <p className='text-text-secondary'>No Reddit posts found. Create some posts on Reddit first!</p>
       ) : (
