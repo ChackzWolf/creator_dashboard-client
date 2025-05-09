@@ -8,6 +8,11 @@ export const getFeedItems = async (filters?: FeedFilters): Promise<FeedItem[]> =
   return response.data.data || [];
 };
 
+export const fetchById= async (id:string): Promise<FeedItem | null> => {
+  const response = await api.get<ApiResponse<FeedItem>>(`/socialAuth/feed/${id}`);
+  console.log(response, 'response itesm')
+  return response.data.data || null
+}
 export const getSavedFeedItems = async (): Promise<FeedItem[]> => {
   const response = await api.get<ApiResponse<FeedItem[]>>('/socialAuth/feed/saved');
   console.log(response.data, 'saved feed response')

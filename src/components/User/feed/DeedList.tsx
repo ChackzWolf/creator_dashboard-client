@@ -1,6 +1,6 @@
 import React from 'react';
-import { FeedItem } from '../../types/feed';
-import FeedCard from './DeedCard';
+import FeedCard from './FeedCard';
+import { FeedItem } from '../../../types/feed';
 
 interface FeedListProps {
   items: FeedItem[];

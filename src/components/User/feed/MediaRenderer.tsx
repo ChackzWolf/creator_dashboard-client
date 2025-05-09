@@ -1,12 +1,5 @@
-// redditMediaProcessor.js
+import { FeedItem } from "../../../types/feed";
 
-import { FeedItem } from "../../types/feed";
-
-/**
- * Extract media from a Reddit post and properly format URLs
- * @param {Object} redditPost - Raw Reddit post data
- * @returns {Array} Media array suitable for FeedItem
- */
 export function extractRedditMedia(redditPost:any) {
     // If the post already has the FeedItem format
     if (redditPost.media && Array.isArray(redditPost.media)) {
@@ -153,7 +146,6 @@ export function extractRedditMedia(redditPost:any) {
     if (feedItem.source === 'reddit') {
       // Construct Reddit URL
       let redditUrl = '';
-      
       // For user profiles
       if (feedItem.platformData?.subreddit?.startsWith('u/')) {
         redditUrl = `https://www.reddit.com/${feedItem.platformData.subreddit}/comments/${feedItem.sourceId}/`;
@@ -171,3 +163,55 @@ export function extractRedditMedia(redditPost:any) {
       window.open(redditUrl, '_blank');
     }
   };
+
+
+
+
+
+  export function convertToMediaPlayerFormat(post: any): FeedItem {
+    // Map media URLs to the format expected by FeedItem
+    const media = post.mediaUrls && post.mediaUrls.length > 0
+      ? post.mediaUrls.map((url: string) => {
+          // Use the same media type detection as backend
+          const isVideo = url.includes('.mp4') || 
+                          url.includes('.mov') || 
+                          url.includes('video');
+          
+          return {
+            type: isVideo ? 'video' : 'image',
+            url: url
+          };
+        })
+      : undefined;
+    
+    return {
+      // Convert ID to string if it's an ObjectId
+      id: typeof post._id === 'object' && post._id !== null ? post._id.toString() : post._id,
+      source: post.platform,
+      sourceId: post.platformPostId,
+      // Combine title and content like the backend does
+      content: post.title ? `${post.title}\n\n${post.content}` : post.content,
+      author: {
+        name: post.author?.name || '',
+        avatar: post.author?.avatar || '',
+        username: post.author?.username || ''
+      },
+      // Use postedAt if available, fall back to createdAt
+      createdAt: post.postedAt ? 
+        (post.postedAt instanceof Date ? post.postedAt.toISOString() : post.postedAt) : 
+        post.createdAt,
+      media: media,
+      likes: post.likes || 0,
+      comments: post.comments || 0,
+      shares: post.shares || 0,
+      // Set isSaved to true as the backend does
+      isSaved: true,
+      isLiked: false,
+      platformData: post.platformData || {},
+      // Convert userId to string if it's an ObjectId
+      userId: typeof post.userId === 'object' && post.userId !== null ? 
+        post.userId.toString() : post.userId
+    };
+  }
+
+  

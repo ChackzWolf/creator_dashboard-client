@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../components/layout/Layout';
-import FeedList from '../components/feed/DeedList';
-import FeedActions from '../components/feed/FeedActions';
-import { useFeed } from '../hooks/useFeed';
-import { RedditPostSelector } from '../components/social/Redditpost';
+import { useFeed } from '../../hooks/useFeed';
 import { FaRedditAlien } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
+import Layout from '../../components/User/layout/Layout';
+import { RedditPostSelector } from '../../components/User/social/Redditpost';
+import FeedActions from '../../components/User/feed/FeedActions';
+import FeedList from '../../components/User/feed/DeedList';
 
 const Feed: React.FC = () => {
   const [redditPostView, setRedditPostView] = useState<boolean>(false)

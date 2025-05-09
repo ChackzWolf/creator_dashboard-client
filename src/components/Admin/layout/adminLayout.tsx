@@ -19,9 +19,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       </div>
     );
   }
-  console.log(isAuthenticated, 'admin auth')
-  // For admin login page, only show the navbar
+
   if (location.pathname === '/admin/login') {
+    console.log('before', isAuthenticated)
+    if (isAuthenticated) return(
+      <Navigate to="/admin/dashboard" replace />
+    )
+    console.log('after' , isAuthenticated)
     return (
       <div className="min-h-screen bg-surface">
         <Navbar />

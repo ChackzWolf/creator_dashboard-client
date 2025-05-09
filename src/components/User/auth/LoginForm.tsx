@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { UserRole } from '../../types/userRoles';
-import { adminLogin } from '../../api/auth';
-import { toast } from 'react-toastify';
+import { useAuth } from '../../../hooks/useAuth';
 
-const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
+const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,16 +15,8 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
     
     try {
       await login({ email, password });
-      if(UserRole.User) navigate('/dashboard');
-      else {
-        const response = await adminLogin({email,password});
-        console.log('login reponse admin', response)
-        if(response.success) {
-          navigate('/admin/dashboard');
-        }else {
-          toast.error(response.error)
-        }
-      }
+      navigate('/dashboard');
+     
     } catch (err:any) {
       setError(err.message || 'Failed to login');
     }
@@ -36,7 +25,7 @@ const LoginForm: React.FC<{role:string}> = ({role = UserRole.User}) => {
   return (
     <div className="max-w-md mx-auto bg-shell md:h-130 md:w-1/2 rounded-lg shadow-md overflow-hidden">
       <div className="px-6 py-8">
-        <h2 className="text-center text-3xl font-bold text-text-primary mb-6">{UserRole.Admin === role && 'Admin '}Login</h2>
+        <h2 className="text-center text-3xl font-bold text-text-primary mb-6">Login</h2>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

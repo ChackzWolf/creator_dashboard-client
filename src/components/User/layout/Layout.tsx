@@ -2,22 +2,20 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 
 interface LayoutProps {
   children: React.ReactNode;
   requireAuth?: boolean;
-  adminOnly?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
   requireAuth = false,
-  adminOnly = false
 }) => {
-  const { isAuthenticated, user, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
-  console.log('trig',isLoading)
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -30,14 +28,6 @@ const Layout: React.FC<LayoutProps> = ({
   if (requireAuth && !isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
-  // Check admin role
-  if (adminOnly && user?.role !== 'admin') {
-
-    console.log('return <Navigate to="/dashboard" replace />;')
-    return <Navigate to="/dashboard" replace />;
-  }
-  console.log(location.pathname, 'location path name')
 
   // For login and register pages, only show the navbar
   if (location.pathname === '/login' || location.pathname === '/register') {

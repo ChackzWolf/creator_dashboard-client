@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FeedItem, ApiResponse } from '../../types/feed'; // Import your types
-import api from '../../utils/api';
+import { ApiResponse, FeedItem } from '../../../types/feed';
+import api from '../../../utils/api';
 
 interface RedditPost {
   kind: string;

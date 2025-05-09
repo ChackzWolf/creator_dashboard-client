@@ -1,16 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAdminAuth } from '../../hooks/useAdminAuth';
+import { getUsers } from '../../api/admin';
 
 const AdminDashboard: React.FC = () => {
   const { admin } = useAdminAuth();
+  const [users, setUsers] = useState([])
   
   useEffect(()=> {
-    
-  })
+    const userData = async ()=>{
+       const users = await getUsers()
+       setUsers(users)
+       return
+    }
+    console.log(userData(), 'user dat//////////')
+  },[])
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-6 text-text-primary">Admin Dashboard</h1>
       
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Welcome, {admin?.name || 'Admin'}</h2>
@@ -21,7 +28,7 @@ const AdminDashboard: React.FC = () => {
         {/* Quick stats cards */}
         <div className="bg-white shadow rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-2">Total Users</h3>
-          <p className="text-3xl font-bold">157</p>
+          <p className="text-3xl font-bold">{users.length}</p>
         </div>
         
         <div className="bg-white shadow rounded-lg p-6">

@@ -1,30 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FeedItem } from '../../types/feed';
-import { FaReddit, FaRegCopy, FaShare } from 'react-icons/fa6';
 import { BsReddit } from 'react-icons/bs';
-import { AiFillLike, AiTwotoneLike } from 'react-icons/ai';
 import { GoBookmark, GoBookmarkFill } from 'react-icons/go';
-import { MdMoreVert } from 'react-icons/md';
 import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
-import { saveFeedItem, toggleFeedLike } from '../../api/feed';
 import { MediaRenderer } from './FeedItemMedia';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { handleRedirectToReddit } from './MediaRenderer';
+import { FeedItem } from '../../../types/feed';
+import { saveFeedItem, toggleFeedLike } from '../../../api/feed';
+import { Report } from '../../../types/report';
 
 interface FeedCardProps {
     item: FeedItem;
     onSave?: (itemId: string) => void;
     onUnsave?: (itemId: string) => void;
     onShare?: (itemId: string) => void;
-    onReport?: (data:any) => void;
+    onReport?: (data:Partial<Report>) => void;
     compact?: boolean;
 }
 
 const FeedCard: React.FC<FeedCardProps> = ({
     item,
-    onSave,
-    onUnsave,
     onShare,
     onReport,
     compact = false,
@@ -52,14 +48,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
     const handleReport = () => {
         if (reportReason.trim()) {
-            const data :any= {
+            const data : Partial<Report>= {
                 reportedUser: item.userId,
                 postId:item.id,
                 reason: reportReason,
                 status: 'pending',
                 adminNotes: '',
             }
-            onReport(data as any);
+            onReport?.(data);
+
             setShowReportModal(false);
             setReportReason('');
         }

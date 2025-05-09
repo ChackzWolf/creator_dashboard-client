@@ -12,15 +12,14 @@ const AdminSidebar: React.FC = () => {
 
   const menuItems = [
     { path: '/admin/dashboard', label: 'Dashboard' },
-    { path: '/admin/users', label: 'Manage Users' },
-    { path: '/admin/settings', label: 'System Settings' },
+    { path: '/admin/users-list', label: 'Manage Users' },
+    // { path: '/admin/settings', label: 'System Settings' },
     { path: '/admin/reports', label: 'Reports' },
   ];
 
   return (
-    <div className="w-64 bg-shell h-full overflow-y-auto">
+    <div className="w-64 bg-shell h-full">
       <div className="p-4">
-        <h2 className="text-xl font-bold text-text-primary mb-4">Admin Portal</h2>
         
         <nav className="mt-6">
           <ul>

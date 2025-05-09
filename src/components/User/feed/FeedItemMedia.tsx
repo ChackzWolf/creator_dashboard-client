@@ -1,13 +1,12 @@
 // DeedCard.tsx or wherever you render the Reddit items
 import { useState, useEffect } from 'react';
 import { extractRedditMedia } from './MediaRenderer';
-import { FeedItem } from '../../types/feed';
+import { FeedItem } from '../../../types/feed';
 
 // This component handles the rendering of media for your feed items
 export const MediaRenderer = ({ feedItem }:{feedItem:FeedItem}) => {
   const [mediaError, setMediaError] = useState(false);
   const [media, setMedia] = useState(feedItem.media || []);
-  
   // Process the media on mount and when feedItem changes
   useEffect(() => {
     // Only reprocess if there's no media or if the "under a tree" issue
@@ -29,11 +28,12 @@ export const MediaRenderer = ({ feedItem }:{feedItem:FeedItem}) => {
   
   // If there's no media or we had an error, don't render anything
   if (mediaError || !media || media.length === 0) {
+    console.log('Triggered error',"MediaError:", mediaError,'media: ',  media,  "media:length",media.length === 0)
     return null;
   }
   
   return (
-    <div className="mt-3 space-y-2 h-70 ">
+    <div className="mt-3 space-y-2 h-70 "> 
       {media.map((mediaItem, index) => (
         <div key={`${feedItem.id}-media-${index}`} className="relative rounded-lg overflow-hidden h-full">
           {mediaItem.type === 'image' ? (

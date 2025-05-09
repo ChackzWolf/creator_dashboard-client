@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../components/layout/Layout';
-import CreditStats from '../components/dashboard/CreditStats';
-import RecentActivity from '../components/dashboard/RecentActivity';
-import SavedFeeds from '../components/dashboard/SavedFeeds';
-import { useCredits } from '../hooks/useCredits';
-import { useFeed } from '../hooks/useFeed';
-import { UserActivity } from '../types/credits';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
+import { useCredits } from '../../hooks/useCredits';
+import { useFeed } from '../../hooks/useFeed';
+import { UserActivity } from '../../types/credits';
+import Layout from '../../components/User/layout/Layout';
+import CreditStats from '../../components/User/dashboard/CreditStats';
+import RecentActivity from '../../components/User/dashboard/RecentActivity';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { creditStats, isLoading: isLoadingCredits } = useCredits();
-  const { fetchSavedItems, savedItems, items, unsaveItem, isLoading: isLoadingFeed } = useFeed();
+  const { 
+    fetchSavedItems, 
+    savedItems, 
+    items, 
+    isLoading: isLoadingFeed 
+  } = useFeed();
   const [activities, setActivities] = useState<UserActivity[]>([]);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
 

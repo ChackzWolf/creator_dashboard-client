@@ -66,6 +66,21 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     checkAuth();
   }, []);
 
+  const updateReportStatus = async(reportId: string, status: string) => {
+    setIsLoading(true)
+    try {
+        const response = await adminApi.post('/admin/update-report-status', {reportId,status});
+        return response
+    } catch (error:any) {
+      return { 
+        success: false, 
+        error: error.error || 'Admin login failed' 
+      };
+    }finally {
+      setIsLoading(false)
+    }
+  }
+
   const login = async (credentials: LoginCredentials): Promise<{success: boolean, error?: string}> => {
     setIsLoading(true);
     try {
@@ -74,7 +89,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
       console.log(response.data.data, 'admin login response')
 
-        const data = response.data.data
+      const data = response.data.data
 
 
       // Save admin token
@@ -88,7 +103,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       console.error('Admin login error:', error);
       return { 
         success: false, 
-        error: error.message || 'Admin login failed' 
+        error: error.error || 'Admin login failed' 
       };
     } finally {
       setIsLoading(false);
@@ -109,7 +124,8 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     isAuthenticated: !!admin,
     isLoading,
     login,
-    logout
+    logout,
+    
   };
   return <AdminAuthContext.Provider value={value}>{children}</AdminAuthContext.Provider>;
 };

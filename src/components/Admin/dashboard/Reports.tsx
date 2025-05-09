@@ -1,6 +1,11 @@
 // src/pages/ReportedPostsPage.tsx
 import React, { useState, useEffect } from 'react';
-import adminApi from '../../utils/adminApi';
+import adminApi from '../../../utils/adminApi';
+import { MediaRenderer } from '../../User/feed/FeedItemMedia';
+import { convertToMediaPlayerFormat, handleRedirectToReddit } from '../../User/feed/MediaRenderer';
+import { FeedItem } from '../../../types/feed';
+import { fetchById } from '../../../api/feed';
+import { updateReportStatus } from '../../../api/admin';
 
 // Mock users
 const mockUsers= [
@@ -165,16 +170,13 @@ export const getMockData = () => {
   };
 };
 
-
-
-
-const ReportedPostsPage: React.FC = () => {
+export const Reports: React.FC = () => {
   const [reports, setReports] = useState<any[]>([]);
   const [selectedReport, setSelectedReport] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'reviewed' | 'resolved' | 'dismissed'>('all');
   const [adminNotes, setAdminNotes] = useState<string>('');
-
+  const [mediaPlayerData, setMediaPlayerData] = useState<FeedItem | null>(null)
   useEffect(() => {
     // In a real app, you would fetch from your API
     const fetchReports = async () => {
@@ -182,13 +184,13 @@ const ReportedPostsPage: React.FC = () => {
       try {
 
         const response = await adminApi.get('/socialAuth/reports')
+        setReports(response.data.data)
         console.log(response, 'response report')
-        setTimeout(() => {
-          setReports(mockReportedPosts);
-          setIsLoading(false);
-        }, 800);
+
       } catch (error) {
         console.error('Error fetching reports:', error);
+        setIsLoading(false);
+      }finally {
         setIsLoading(false);
       }
     };
@@ -201,13 +203,14 @@ const ReportedPostsPage: React.FC = () => {
     setAdminNotes(report.adminNotes || '');
   };
 
-  const handleUpdateStatus = (status: any['status']) => {
+  const handleUpdateStatus = async(status: any['status']) => {
     if (!selectedReport) return;
-
+    const response = await updateReportStatus(selectedReport._id, status);
+    console.log()
     // In a real app, you would make an API call here
     const updatedReport = {
       ...selectedReport,
-      status,
+      status:response.data.status,
       adminNotes,
       updatedAt: new Date().toISOString()
     };
@@ -233,7 +236,18 @@ const ReportedPostsPage: React.FC = () => {
       minute: '2-digit'
     }).format(date);
   };
-
+  useEffect(()=> {
+    async function getMediaPlayerData(){
+      if(selectedReport && selectedReport.postId !== null){
+        console.log(selectedReport.postId, 'postId');        
+        const data: FeedItem = await fetchById(selectedReport.postId._id)   as FeedItem
+        console.log(data,  'data///////////')
+        setMediaPlayerData(data);
+      }
+    }
+    getMediaPlayerData()
+  },[selectedReport]);
+  
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -241,6 +255,7 @@ const ReportedPostsPage: React.FC = () => {
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -454,19 +469,20 @@ const ReportedPostsPage: React.FC = () => {
                         <p className="mt-1 text-sm text-gray-500">
                           {selectedReport.postId.content}
                         </p>
-                        {selectedReport.postId.mediaUrls && selectedReport.postId.mediaUrls.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {selectedReport.postId.mediaUrls.map((url:any, index:number) => (
-                              <div key={index} className="h-24 w-24 rounded-md overflow-hidden">
-                                <img
-                                  src={url}
-                                  alt="Post media"
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
-                            ))}
+                        {mediaPlayerData ? <MediaRenderer feedItem={mediaPlayerData} />:(
+                          <div className='text-red-600 font-bold'>
+                             <h1>Cannot view the post now. Try visiting the post by clicking the 'Visit' button below.</h1>
                           </div>
-                        )}
+                        ) }
+
+                        <button className="block  m-2 w-20 text-center py-2 text-sm p-1 bg-shell cursor-pointer rounded-lg hover:bg-gray-700 text-text-secondary" 
+                                onClick={()=> {  
+                                  console.log('clicked')
+                                  handleRedirectToReddit(convertToMediaPlayerFormat(mediaPlayerData))
+                                  }}>
+                                View post
+                        </button>
+                        
                       </div>
                     </div>
 
@@ -519,4 +535,3 @@ const ReportedPostsPage: React.FC = () => {
   );
 };
 
-export default ReportedPostsPage;

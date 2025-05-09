@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { useCredits } from '../../hooks/useCredits';
+import { useAuth } from '../../../hooks/useAuth';
+import { useCredits } from '../../../hooks/useCredits';
 
 const Sidebar: React.FC = () => {
   const { user } = useAuth();

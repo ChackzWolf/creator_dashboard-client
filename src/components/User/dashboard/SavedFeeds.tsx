@@ -1,6 +1,6 @@
 import React from 'react';
 import { FeedItem } from '../../types/feed';
-import FeedCard from '../feed/DeedCard';
+import FeedCard from '../feed/FeedCard';
 
 interface SavedFeedsProps {
   items: FeedItem[];

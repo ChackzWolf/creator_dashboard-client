@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../components/layout/Layout';
-import { useAuth } from '../hooks/useAuth';
-import { updateProfile } from '../api/auth';
 import { FaSquareReddit } from "react-icons/fa6";
-import api from '../utils/api';
-import FeedList from '../components/feed/DeedList';
-import { getSavedFeedItems } from '../api/feed';
-import { FeedItem } from '../types/feed';
+import { FeedItem } from '../../types/feed';
+import { useAuth } from '../../hooks/useAuth';
+import api from '../../utils/api';
+import { getSavedFeedItems } from '../../api/feed';
+import { updateProfile } from '../../api/auth';
+import Layout from '../../components/User/layout/Layout';
+import FeedList from '../../components/User/feed/DeedList';
 
 
 const Profile: React.FC = () => {

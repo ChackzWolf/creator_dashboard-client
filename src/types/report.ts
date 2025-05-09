@@ -1,8 +1,12 @@
+
+
 export interface Report {
-    id: string;
-    userId: string;
-    feedItemId: string;
-    reason: string;
-    status: 'pending' | 'reviewed' | 'resolved';
-    createdAt: string;
-  }
+  reportedBy: string; 
+  reportedUser: string; 
+  postId: string; 
+  reason: string;
+  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
+  adminNotes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

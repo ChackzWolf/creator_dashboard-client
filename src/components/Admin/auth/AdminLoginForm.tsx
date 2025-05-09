@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
-import { toast } from 'react-toastify';
 import { useAdminAuth } from '../../../hooks/useAdminAuth';
+import { toast } from 'react-toastify';
 
 const AdminLoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -30,8 +29,9 @@ const AdminLoginForm: React.FC = () => {
     }
   };
 
+   
   return (
-    <div className="max-w-md mx-auto bg-shell md:h-130 md:w-1/2 rounded-lg shadow-md overflow-hidden">
+    <div className="max-w-md mx-auto bg-shell min-h-screen md:w-1/2 rounded-lg shadow-md overflow-hidden">
       <div className="px-6 py-8">
         <h2 className="text-center text-3xl font-bold text-text-primary mb-6">Admin Login</h2>
         
