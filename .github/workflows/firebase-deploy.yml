@@ -21,8 +21,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: https://creator-dashboard-458097596190.us-central1.run.app
-          
+          VITE_API_URL: https://creator-dashboard-458097596190.us-central1.run.app/api
+                    
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
