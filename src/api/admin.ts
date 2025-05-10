@@ -25,3 +25,15 @@ export const getUsers = async(search:any = null) => {
     };
   }
 }
+
+export const toggleBlockUser = async(userId:string) => {
+  try {
+    const response = await adminApi.post('/admin/toggle-block-user', {userId});
+    return response.data;
+  } catch (error:any) {
+    return { 
+      success: false, 
+      error: error.error || 'Admin login failed' 
+    };
+  }
+}

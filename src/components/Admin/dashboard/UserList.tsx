@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import adminApi from "../../../utils/adminApi";
 import { useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import Table from "../../Common/Table";
-import { getUsers } from "../../../api/admin";
+import { getUsers, toggleBlockUser } from "../../../api/admin";
 
 
 
@@ -13,7 +12,7 @@ interface IUser{
   lastName:string;
   email: string;
   password: string;
-  isblocked: boolean;
+  isBlocked: boolean;
   purchasedCourses: string[];
   cart:string[]; 
   wishlist:string[]; 
@@ -48,19 +47,18 @@ function Users() {
       fetchUsers();
     }, []);
 
-    const handleToggleBlock = async (studentId:string) => {
+    const handleToggleBlock = async (userId:string) => {
       setIsBlocking(true)
-      const response = await adminApi.post('', {userId:studentId})
-        if(response.status = 202){
-          setUsers((prevStudents) =>
-          prevStudents.map((student) =>
-            student._id === studentId
-              ? { ...student, isblocked: !student.isblocked }
-              : student
+      const response = await toggleBlockUser(userId);
+        if(response.success){
+          setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === userId
+              ? { ...user, isBlocked: !user.isBlocked }
+              : user
             )
           );
         }
-        
         setConfirmTemplateVisible(false)
         setIsBlocking(false)
   }
@@ -108,24 +106,23 @@ function Users() {
       key:'action',
       render: (row:any)=> (
         <>
-          <button className="bg-primary text-white rounded-lg px-3 md:px-6 m-1 md:m-2 py-1" onClick={()=> navigate('/')}>
+          <button className="bg-primary text-white rounded-lg px-3 md:px-6 m-1 md:m-2 py-1  cursor-pointer" onClick={()=> navigate('/')}>
             Details
           </button>
           <button
             className={`${
-              row.isblocked
+              row.isBlocked
                 ? "bg-green-500 md:px-4"
                 : "bg-red-600  md:px-6"
-            } rounded-lg px-3  m-1 md:m-2 py-1 text-white`}
-            onClick={() => confirmBlock(row._id,`${row.firstName} ${row.lastName}`,row.isblocked)}
+            } rounded-lg px-3  m-1 md:m-2 py-1 text-white cursor-pointer`}
+            onClick={() => confirmBlock(row._id,row.email,row.isBlocked)}
           >
-            {row.isblocked ? "Unblock" : "Block"}
+            {row.isBlocked ? "Unblock" : "Block"}
           </button>
         </>
       )
     }
   ]
-
    return (<>
             <div className={`fixed inset-0 flex justify-center  min-h-screen items-center z-50 transition-opacity duration-300 ${confirmTemplateVisible ? "bg-black bg-opacity-50" : "opacity-0 hidden"}`}
                 >
@@ -137,19 +134,20 @@ function Users() {
                         className="bg-white p-5 rounded-lg shadow-lg z-50 md:mt-48 ">
                         <div className="flex flex-col items-center justify-center gap-7">
                           <div className=" mx-7">
-                            <h1 className="text-primary text-center mx-2">{`Are you sure you want to ${isBlocked? "unblock" : "block"} student named `}</h1>
+                            <h1 className="text-primary text-center mx-2">{`Are you sure you want to ${isBlocked? "unblock" : "block"} user with email id `}</h1>
                             <h1 className="font-semibold text-primary text-center mx-2">{name}</h1>
                           </div> 
 
                             <div className=" flex justify-between gap-5">
                               {isBlocking ? <>Loadin...</> : (
                                 <>
-                                  <button className="bg-lavender px-3 py-1 rounded-lg" onClick={cancelBlock}>
-                                    Cancel
-                                  </button>
-                                  <button className="bg-primary px-3 py-1 rounded-lg text-accent" onClick={()=> handleToggleBlock(userId)} >
+                                  <button className="bg-primary px-3 py-1 rounded-lg text-accent cursor-pointer text-text-primary" onClick={()=> handleToggleBlock(userId)} >
                                     Confirm
                                   </button>
+                                  <button className="bg-lavender px-3 py-1 rounded-lg cursor-pointer bg-secondary text-text-secondary" onClick={cancelBlock}>
+                                    Cancel
+                                  </button>
+
                                 </>
                               )}
 
@@ -159,7 +157,7 @@ function Users() {
 
 
             </div>
-            <Table columns={columns} data={users} title={'Students'}/>
+            <Table columns={columns} data={users} title={'Users'}/>
           </>)
 }
 

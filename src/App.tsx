@@ -76,7 +76,7 @@ function App() {
                 </AdminLayout>
               </AdminRoute>
             } />
-
+        
             {/* Redirect admin root */}
             <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
           </Routes>
